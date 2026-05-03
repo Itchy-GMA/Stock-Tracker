@@ -2,364 +2,364 @@
   "stocks": [
     {
       "code": "2404",
-      "name": "2404",
+      "name": "鉄人化計画",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 800.86,
       "latestDate": "2026-05-03"
     },
     {
       "code": "2694",
-      "name": "2694",
+      "name": "焼肉坂井HD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 163.63,
       "latestDate": "2026-05-03"
     },
     {
       "code": "2762",
-      "name": "2762",
+      "name": "三光マーケ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1255.16,
       "latestDate": "2026-05-03"
     },
     {
       "code": "3053",
-      "name": "3053",
+      "name": "ペッパーFS",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 486.27,
       "latestDate": "2026-05-03"
     },
     {
       "code": "3372",
-      "name": "3372",
+      "name": "関門海",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 2285.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "3904",
-      "name": "3904",
+      "name": "カヤック",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 957.29,
       "latestDate": "2026-05-03"
     },
     {
       "code": "4584",
-      "name": "4584",
+      "name": "キッズウェル・バイオ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 350.25,
       "latestDate": "2026-05-03"
     },
     {
       "code": "4661",
-      "name": "4661",
+      "name": "オリエンタルランド",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 347.86,
       "latestDate": "2026-05-03"
     },
     {
       "code": "6752",
-      "name": "6752",
+      "name": "パナソニックHD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 2110.36,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7918",
-      "name": "7918",
+      "name": "ヴィア・HD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 962.91,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8002",
-      "name": "8002",
+      "name": "丸紅",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 193.4,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8088",
-      "name": "8088",
+      "name": "岩谷産業",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 310.35,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8214",
-      "name": "8214",
+      "name": "AOKIホールディングス",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 622.45,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8306",
-      "name": "8306",
+      "name": "三菱UFJ FG",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 731.23,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9023",
-      "name": "9023",
+      "name": "東京メトロ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1739.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9202",
-      "name": "9202",
+      "name": "ANA HD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 3491.34,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9704",
-      "name": "9704",
+      "name": "アゴーラ・ホスピタリティ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 144.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9973",
-      "name": "9973",
+      "name": "小僧寿し",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 939.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9861",
-      "name": "9861",
+      "name": "吉野家HD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1658.9,
       "latestDate": "2026-05-03"
     },
     {
       "code": "3407",
-      "name": "3407",
+      "name": "旭化成",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 617.1,
       "latestDate": "2026-05-03"
     },
     {
       "code": "6326",
-      "name": "6326",
+      "name": "クボタ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 283.66,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7004",
-      "name": "7004",
+      "name": "日立造船",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 664.38,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7013",
-      "name": "7013",
+      "name": "IHI",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 235.1,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8729",
-      "name": "8729",
+      "name": "ソニーフィナンシャル",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 173.8,
       "latestDate": "2026-05-03"
     },
     {
       "code": "8801",
-      "name": "8801",
+      "name": "三井不動産",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 329.37,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9432",
-      "name": "9432",
+      "name": "NTT",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 93.64,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7201",
-      "name": "7201",
+      "name": "日産自動車",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 420.29,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7203",
-      "name": "7203",
+      "name": "トヨタ自動車",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 517.83,
       "latestDate": "2026-05-03"
     },
     {
       "code": "6594",
-      "name": "6594",
+      "name": "日本電産（ニデック）",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 702.58,
       "latestDate": "2026-05-03"
     },
     {
       "code": "261A",
-      "name": "261A",
+      "name": "ソラスト",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1430.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "4245",
-      "name": "4245",
+      "name": "ダイキアクシス",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 289.88,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5602",
-      "name": "5602",
+      "name": "栗本鐵工所",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 454.04,
       "latestDate": "2026-05-03"
     },
     {
       "code": "256A",
-      "name": "256A",
+      "name": "ツルハHD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 22056.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "1961",
-      "name": "1961",
+      "name": "三機工業",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 94.83,
       "latestDate": "2026-05-03"
     },
     {
       "code": "1833",
-      "name": "1833",
+      "name": "奥村組",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 2529.89,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9551",
-      "name": "9551",
+      "name": "メタウォーター",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1020.43,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7925",
-      "name": "7925",
+      "name": "前澤化成工業",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1584.14,
       "latestDate": "2026-05-03"
     },
     {
       "code": "1820",
-      "name": "1820",
+      "name": "西松建設",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1590.11,
       "latestDate": "2026-05-03"
     },
     {
       "code": "6946",
-      "name": "6946",
+      "name": "日本アビオニクス",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 754.52,
       "latestDate": "2026-05-03"
     },
     {
       "code": "4275",
-      "name": "4275",
+      "name": "カーリットHD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 504.43,
       "latestDate": "2026-05-03"
     },
     {
       "code": "4403",
-      "name": "4403",
+      "name": "日油",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 250.71,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7721",
-      "name": "7721",
+      "name": "東京計器",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 975.42,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5019",
-      "name": "5019",
+      "name": "出光興産",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 363.77,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5631",
-      "name": "5631",
+      "name": "日本製鋼所",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 653.3,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5020",
-      "name": "5020",
+      "name": "ENEOSホールディングス",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 349.16,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7011",
-      "name": "7011",
+      "name": "三菱重工業",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 411.48,
       "latestDate": "2026-05-03"
     },
     {
       "code": "218A",
-      "name": "218A",
+      "name": "ツクルバ",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 355.0,
       "latestDate": "2026-05-03"
     },
     {
       "code": "7545",
-      "name": "7545",
+      "name": "西松屋チェーン",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1321.01,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5411",
-      "name": "5411",
+      "name": "JFEホールディングス",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 1108.55,
       "latestDate": "2026-05-03"
     },
     {
       "code": "5021",
-      "name": "5021",
+      "name": "コスモエネルギーHD",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 561.87,
       "latestDate": "2026-05-03"
     },
     {
       "code": "9513",
-      "name": "9513",
+      "name": "電源開発（J-POWER）",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 2201.77,
       "latestDate": "2026-05-03"
     },
     {
       "code": "1605",
-      "name": "1605",
+      "name": "INPEX",
       "addedAt": "2025-01-01T00:00:00.000Z",
       "latestPrice": 2267.37,
       "latestDate": "2026-05-03"
@@ -679,5 +679,5 @@
       }
     ]
   },
-  "lastUpdated": "2026-05-03T15:09:36Z"
+  "lastUpdated": "2026-05-03T15:25:50Z"
 }
