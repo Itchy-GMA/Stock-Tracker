@@ -1,39 +1,13 @@
-name: 週次株価取得（毎週土曜13:00 JST）
-
-on:
-  schedule:
-    # UTC 04:00 = JST 13:00（土曜日）
-    - cron: '0 4 * * 6'
-  workflow_dispatch:  # 手動実行も可能
-
-permissions:
-  contents: write  # results.json をコミットするために必要
-
-jobs:
-  fetch:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: リポジトリをチェックアウト
-        uses: actions/checkout@v4
-
-      - name: Python のセットアップ
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: 依存ライブラリのインストール
-        run: pip install requests
-
-      - name: 株価を取得して results.json を更新
-        env:
-          STOOQ_APIKEY: ${{ secrets.STOOQ_APIKEY }}
-        run: python fetch_stocks.py
-
-      - name: results.json をコミット＆プッシュ
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add results.json
-          git diff --cached --quiet || git commit -m "chore: 株価更新 $(date '+%Y-%m-%d')"
-          git push
+株価トラッカー
+読み込み中...
+＋ 銘柄を追加
+results.json の読み込みに失敗しました
+銘柄を追加すると、毎週土曜日に株価が自動取得されます。
+証券コードは東証4桁（例: 7203 = トヨタ）
+セットアップガイド
+このリポジトリを Fork またはそのまま使う
+stooq apikey を無料取得（登録不要・CAPTCHAのみ）
+GitHubリポジトリの Settings → Secrets → Actions で STOOQ_APIKEY を追加
+Settings → Pages で main ブランチの /（root）を公開設定
+下の「銘柄を追加」から証券コードを入力 → results.json に保存
+毎週土曜13:00に GitHub Actions が自動実行・株価更新
