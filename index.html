@@ -1,13 +1,365 @@
-株価トラッカー
-読み込み中...
-＋ 銘柄を追加
-results.json の読み込みに失敗しました
-銘柄を追加すると、毎週土曜日に株価が自動取得されます。
-証券コードは東証4桁（例: 7203 = トヨタ）
-セットアップガイド
-このリポジトリを Fork またはそのまま使う
-stooq apikey を無料取得（登録不要・CAPTCHAのみ）
-GitHubリポジトリの Settings → Secrets → Actions で STOOQ_APIKEY を追加
-Settings → Pages で main ブランチの /（root）を公開設定
-下の「銘柄を追加」から証券コードを入力 → results.json に保存
-毎週土曜13:00に GitHub Actions が自動実行・株価更新
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>株価トラッカー</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.15);
+    --text: #1a1a1a;
+    --text-muted: #6b6b6b;
+    --up: #2d7a3a;
+    --up-bg: #eaf3ec;
+    --down: #b03030;
+    --down-bg: #faeaea;
+    --accent: #1a1a1a;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141414;
+      --surface: #1e1e1e;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text: #eeeeee;
+      --text-muted: #888;
+      --up-bg: #1a3320;
+      --down-bg: #321a1a;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  .app { max-width: 960px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .header-meta { font-size: 12px; color: var(--text-muted); }
+  .add-panel { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .add-panel input { flex: 1; min-width: 110px; padding: 8px 12px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 14px; background: var(--bg); color: var(--text); font-family: inherit; }
+  .add-panel input:focus { outline: none; border-color: var(--accent); }
+  .add-panel label { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .add-panel .input-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 110px; }
+  button { padding: 8px 18px; border: 0.5px solid var(--border-strong); border-radius: var(--radius-sm); background: transparent; color: var(--text); font-size: 13px; font-family: inherit; cursor: pointer; transition: background 0.12s; }
+  button:hover { background: var(--border); }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .btn-primary:hover { opacity: 0.85; background: var(--accent); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-danger { color: var(--down); border-color: var(--down); }
+  .btn-danger:hover { background: var(--down-bg); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; cursor: pointer; transition: border-color 0.15s; position: relative; overflow: hidden; }
+  .card:hover { border-color: var(--border-strong); }
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .card-code { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+  .card-name { font-size: 15px; font-weight: 600; margin-top: 3px; line-height: 1.3; }
+  .card-price { font-size: 26px; font-weight: 600; letter-spacing: -0.03em; margin: 10px 0 6px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 100px; }
+  .badge-up { background: var(--up-bg); color: var(--up); }
+  .badge-down { background: var(--down-bg); color: var(--down); }
+  .badge-flat { background: var(--border); color: var(--text-muted); }
+  .sparkwrap { margin-top: 14px; height: 56px; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+  .card-date { font-size: 11px; color: var(--text-muted); }
+  .remove-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; border-radius: 4px; }
+  .remove-btn:hover { color: var(--down); background: var(--down-bg); }
+  .empty { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-size: 14px; line-height: 2; }
+  .status { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #2d7a3a; display: inline-block; }
+  /* モーダル */
+  .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; padding: 1rem; }
+  .modal-bg.open { display: flex; }
+  .modal { background: var(--surface); border-radius: var(--radius); padding: 1.75rem; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; border: 0.5px solid var(--border-strong); }
+  .modal h2 { font-size: 17px; font-weight: 600; margin-bottom: 1.25rem; }
+  .chart-container { position: relative; height: 200px; margin-bottom: 1.25rem; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--text-muted); font-weight: 400; padding: 4px 0 10px; border-bottom: 0.5px solid var(--border); }
+  td { padding: 8px 0; border-bottom: 0.5px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+  .modal-footer { margin-top: 1.25rem; display: flex; justify-content: flex-end; gap: 8px; }
+  .info-box { font-size: 12px; color: var(--text-muted); background: var(--bg); border-radius: var(--radius-sm); padding: 0.75rem 1rem; margin-top: 1rem; line-height: 1.6; }
+  .info-box a { color: var(--text-muted); }
+  .setup-guide { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 2rem; }
+  .setup-guide h3 { font-size: 14px; font-weight: 600; margin-bottom: 0.75rem; }
+  .setup-guide ol { font-size: 13px; color: var(--text-muted); line-height: 2; padding-left: 1.5rem; }
+  .setup-guide code { font-family: monospace; font-size: 12px; background: var(--bg); padding: 1px 6px; border-radius: 4px; color: var(--text); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>株価トラッカー</h1>
+      <div class="header-meta" id="last-updated">読み込み中...</div>
+    </div>
+    <button class="btn-primary" onclick="openAddModal()">＋ 銘柄を追加</button>
+  </header>
+
+  <div class="status" id="status">
+    <span class="dot"></span><span>データ読み込み中...</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="setup-guide" id="setup-guide" style="display:none;">
+    <h3>セットアップガイド</h3>
+    <ol>
+      <li>このリポジトリを <strong>Fork</strong> またはそのまま使う</li>
+      <li><a href="https://stooq.com/q/d/?s=7203.jp&get_apikey" target="_blank">stooq apikey を無料取得</a>（登録不要・CAPTCHAのみ）</li>
+      <li>GitHubリポジトリの <code>Settings → Secrets → Actions</code> で <code>STOOQ_APIKEY</code> を追加</li>
+      <li><code>Settings → Pages</code> で <code>main</code> ブランチの <code>/</code>（root）を公開設定</li>
+      <li>下の「銘柄を追加」から証券コードを入力 → <code>results.json</code> に保存</li>
+      <li>毎週土曜13:00に GitHub Actions が自動実行・株価更新</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 銘柄追加モーダル -->
+<div class="modal-bg" id="add-modal" onclick="closeAddModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2>銘柄を追加</h2>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="input-group">
+        <label>証券コード（東証4桁）</label>
+        <input type="text" id="m-code" placeholder="例: 7203" maxlength="6" />
+      </div>
+      <div class="input-group">
+        <label>企業名（省略可）</label>
+        <input type="text" id="m-name" placeholder="例: トヨタ自動車" />
+      </div>
+    </div>
+    <div class="info-box">
+      入力した銘柄は <code>results.json</code> に保存されます。<br>
+      GitHub Actions が毎週土曜13:00に stooq から株価を自動取得します。
+    </div>
+    <div class="modal-footer">
+      <button onclick="closeAddModal()">キャンセル</button>
+      <button class="btn-primary" onclick="addStock()">追加</button>
+    </div>
+  </div>
+</div>
+
+<!-- 履歴モーダル -->
+<div class="modal-bg" id="hist-modal" onclick="closeHistModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h2 id="hist-title">株価履歴</h2>
+    <div class="chart-container">
+      <canvas id="hist-chart" role="img" aria-label="週次株価チャート"></canvas>
+    </div>
+    <table>
+      <thead><tr><th>日付</th><th>終値</th><th>前週比</th></tr></thead>
+      <tbody id="hist-body"></tbody>
+    </table>
+    <div class="modal-footer">
+      <button class="btn-danger btn-sm" id="remove-btn">この銘柄を削除</button>
+      <button onclick="closeHistModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const RESULTS_URL = './results.json';
+let data = { stocks: [], history: {}, lastUpdated: null };
+let histChart = null;
+
+// ── データ読み込み ─────────────────────────────
+async function loadData() {
+  try {
+    const r = await fetch(RESULTS_URL + '?_=' + Date.now());
+    if (r.ok) data = await r.json();
+    else throw new Error('not found');
+    setStatus('最終更新: ' + formatDate(data.lastUpdated));
+    document.getElementById('last-updated').textContent =
+      data.lastUpdated ? '自動更新: 毎週土曜 13:00 | 最終取得: ' + formatDate(data.lastUpdated) : '未取得';
+  } catch {
+    setStatus('results.json の読み込みに失敗しました');
+    document.getElementById('setup-guide').style.display = '';
+  }
+  render();
+}
+
+function formatDate(iso) {
+  if (!iso) return '---';
+  return iso.slice(0, 10).replace(/-/g, '/');
+}
+
+async function saveData() {
+  // GitHub Pages では書き込み不可のため、ローカルのみ反映してダウンロード案内
+  // 実際の保存は GitHub Actions が行う
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'results.json';
+  a.click();
+  alert('results.json をダウンロードしました。\nリポジトリのルートに上書き保存してコミット＆プッシュしてください。\n（次回以降はGitHub Actionsが自動更新します）');
+}
+
+// ── 銘柄追加 ─────────────────────────────────
+function openAddModal() { document.getElementById('add-modal').classList.add('open'); document.getElementById('m-code').focus(); }
+function closeAddModal(e) { if (!e || e.target.id === 'add-modal') document.getElementById('add-modal').classList.remove('open'); }
+
+function addStock() {
+  const code = document.getElementById('m-code').value.trim().toUpperCase();
+  const name = document.getElementById('m-name').value.trim() || code;
+  if (!code) { alert('証券コードを入力してください'); return; }
+  if (data.stocks.find(s => s.code === code)) { alert(code + ' は既に追加されています'); return; }
+  data.stocks.push({ code, name, addedAt: new Date().toISOString() });
+  document.getElementById('m-code').value = '';
+  document.getElementById('m-name').value = '';
+  closeAddModal();
+  render();
+  saveData();
+}
+
+// ── 銘柄削除 ─────────────────────────────────
+function removeStock(code) {
+  if (!confirm(code + ' を削除しますか？')) return;
+  data.stocks = data.stocks.filter(s => s.code !== code);
+  delete data.history[code];
+  closeHistModal();
+  render();
+  saveData();
+}
+
+// ── スパークライン ────────────────────────────
+function sparkSVG(prices, isUp) {
+  if (!prices || prices.length < 2) return '<div style="height:56px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-muted)">データなし</div>';
+  const w = 240, h = 52, pad = 3;
+  const min = Math.min(...prices), max = Math.max(...prices), range = max - min || 1;
+  const pts = prices.map((p, i) => {
+    const x = pad + i / (prices.length - 1) * (w - pad * 2);
+    const y = h - pad - (p - min) / range * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  });
+  const color = isUp ? '#2d7a3a' : '#b03030';
+  const fill = isUp ? 'rgba(45,122,58,0.1)' : 'rgba(176,48,48,0.1)';
+  const last = pts[pts.length - 1].split(',');
+  const fillPath = `M${pts[0]} L${pts.join(' L')} L${last[0]},${h} L${pad},${h} Z`;
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="56" preserveAspectRatio="none">
+    <path d="${fillPath}" fill="${fill}"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.8" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+// ── レンダリング ──────────────────────────────
+function render() {
+  const grid = document.getElementById('grid');
+  if (!data.stocks.length) {
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1">銘柄を追加すると、毎週土曜日に株価が自動取得されます。<br><small>証券コードは東証4桁（例: 7203 = トヨタ）</small></div>';
+    document.getElementById('setup-guide').style.display = '';
+    return;
+  }
+  document.getElementById('setup-guide').style.display = 'none';
+  grid.innerHTML = data.stocks.map(s => cardHTML(s)).join('');
+}
+
+function cardHTML(s) {
+  const hist = (data.history[s.code] || []).slice(-12);
+  const latest = s.latestPrice;
+  const prev = hist.length >= 2 ? hist[hist.length - 2].price : null;
+  const diff = (latest != null && prev != null) ? latest - prev : null;
+  const pct = diff != null ? (diff / prev * 100).toFixed(2) : null;
+  const isUp = diff != null ? diff >= 0 : true;
+  const badgeCls = diff == null ? 'badge-flat' : isUp ? 'badge-up' : 'badge-down';
+  const sign = diff != null && diff >= 0 ? '+' : '';
+  const badgeText = diff == null ? '---' : `${sign}${diff.toFixed(0)}円 (${sign}${pct}%)`;
+  const priceText = latest != null ? '¥' + latest.toLocaleString('ja-JP') : '未取得';
+  const prices = hist.map(h => h.price);
+  return `<div class="card" onclick="showHistory('${s.code}')">
+    <div class="card-top">
+      <div>
+        <div class="card-code">${s.code}</div>
+        <div class="card-name">${s.name}</div>
+      </div>
+      <button class="remove-btn" onclick="event.stopPropagation();removeStock('${s.code}')" title="削除">×</button>
+    </div>
+    <div class="card-price">${priceText}</div>
+    <span class="badge ${badgeCls}">${badgeText}</span>
+    <div class="sparkwrap">${sparkSVG(prices, isUp)}</div>
+    <div class="card-footer">
+      <span class="card-date">更新: ${s.latestDate ? s.latestDate.replace(/-/g, '/') : '---'}</span>
+      <span style="font-size:11px;color:var(--text-muted)">クリックで詳細</span>
+    </div>
+  </div>`;
+}
+
+// ── 履歴モーダル ──────────────────────────────
+function showHistory(code) {
+  const stock = data.stocks.find(s => s.code === code);
+  const hist = [...(data.history[code] || [])].sort((a, b) => b.date.localeCompare(a.date));
+  document.getElementById('hist-title').textContent = `${stock?.name || code}（${code}）`;
+  document.getElementById('remove-btn').onclick = () => removeStock(code);
+
+  // チャート
+  const labels = [...hist].reverse().map(h => h.date.slice(5).replace('-', '/'));
+  const prices = [...hist].reverse().map(h => h.price);
+  if (histChart) histChart.destroy();
+  const ctx = document.getElementById('hist-chart').getContext('2d');
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  histChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: prices,
+        borderColor: '#2d7a3a',
+        backgroundColor: 'rgba(45,122,58,0.08)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 3,
+        pointBackgroundColor: '#2d7a3a'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: isDark ? '#888' : '#6b6b6b', font: { size: 11 }, maxRotation: 45, autoSkip: true } },
+        y: { ticks: { color: isDark ? '#888' : '#6b6b6b', font: { size: 11 }, callback: v => '¥' + v.toLocaleString() } }
+      }
+    }
+  });
+
+  // テーブル
+  const tbody = document.getElementById('hist-body');
+  tbody.innerHTML = hist.length === 0
+    ? '<tr><td colspan="3" style="color:var(--text-muted);padding:12px 0;">データなし（次の土曜日に自動取得されます）</td></tr>'
+    : hist.map((h, i) => {
+        const prev = hist[i + 1];
+        const diff = prev ? h.price - prev.price : null;
+        const pct = diff != null ? (diff / prev.price * 100).toFixed(2) : null;
+        const sign = diff != null && diff >= 0 ? '+' : '';
+        const cls = diff == null ? 'badge-flat' : diff >= 0 ? 'badge-up' : 'badge-down';
+        const badge = diff == null ? '---' : `${sign}${diff.toFixed(0)} (${sign}${pct}%)`;
+        return `<tr>
+          <td>${h.date.replace(/-/g, '/')}</td>
+          <td style="font-family:monospace">¥${h.price.toLocaleString('ja-JP')}</td>
+          <td><span class="badge ${cls}" style="font-size:11px;padding:2px 8px;">${badge}</span></td>
+        </tr>`;
+      }).join('');
+
+  document.getElementById('hist-modal').classList.add('open');
+}
+
+function closeHistModal(e) {
+  if (!e || e.target.id === 'hist-modal') document.getElementById('hist-modal').classList.remove('open');
+}
+
+// ── ユーティリティ ────────────────────────────
+function setStatus(msg) {
+  document.getElementById('status').innerHTML = `<span class="dot"></span><span>${msg}</span>`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAddModal(); closeHistModal(); }
+});
+
+loadData();
+</script>
+</body>
+</html>
