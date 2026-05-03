@@ -1,0 +1,33 @@
+name: 週次株価取得（毎週土曜13:00 JST）
+
+on:
+  schedule:
+    - cron: '0 4 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+      - name: Python のセットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 依存ライブラリのインストール
+        run: pip install requests
+      - name: 株価を取得して results.json を更新
+        env:
+          STOOQ_APIKEY: ${{ secrets.STOOQ_APIKEY }}
+        run: python fetch_stocks.py
+      - name: results.json をコミット＆プッシュ
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results.json
+          git diff --cached --quiet || git commit -m "chore: 株価更新 $(date '+%Y-%m-%d')"
+          git push
